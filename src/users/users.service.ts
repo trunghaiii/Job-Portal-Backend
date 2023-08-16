@@ -6,6 +6,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 
+import { hashSync } from "bcrypt"
+
+const saltRounds: number = 10;
+
 @Injectable()
 export class UsersService {
 
@@ -13,8 +17,13 @@ export class UsersService {
 
   create(createUserDto: CreateUserDto) {
     //console.log("bitch", createUserDto);
+    const hash = hashSync(createUserDto.password, saltRounds);
 
-    const createdUser = new this.UserModel(createUserDto);
+    const createdUser = new this.UserModel({
+      name: createUserDto.name,
+      email: createUserDto.email,
+      password: hash
+    });
     return createdUser.save();
 
   }
