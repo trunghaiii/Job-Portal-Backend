@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { APP_GUARD } from '@nestjs/core';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   imports: [UsersModule, AuthModule,
@@ -22,7 +23,8 @@ import { APP_GUARD } from '@nestjs/core';
         isGlobal: true,
       }
     ),
-    AuthModule
+    AuthModule,
+    CompaniesModule
 
   ],
   controllers: [AppController],
