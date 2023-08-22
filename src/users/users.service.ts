@@ -6,7 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 
-import { hashSync } from "bcrypt"
+import { hashSync, compareSync } from "bcrypt"
 
 const saltRounds: number = 10;
 
@@ -34,6 +34,14 @@ export class UsersService {
 
   findOne(id: number) {
     return `This action returns a #${id} user`;
+  }
+
+  findOneByName(username: string) {
+    return this.UserModel.findOne({ email: username });
+  }
+
+  checkPassword(pass: string, hash: string) {
+    return compareSync(pass, hash);
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
