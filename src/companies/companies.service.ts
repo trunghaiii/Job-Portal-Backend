@@ -27,7 +27,10 @@ export class CompaniesService {
   }
 
   async findAllPagination(currentPage: string, limit: string, queryString: string) {
-    const { sort, projection, population } = aqp(queryString);
+    const { filter, sort, projection, population } = aqp(queryString);
+    delete filter.page;
+    // console.log("filter", filter);
+
     // 1. calculate skip:
     const skip: number = (+currentPage - 1) * +limit
 
@@ -36,7 +39,7 @@ export class CompaniesService {
     const totalPages: number = Math.ceil(totalCompanies / +limit)
 
     // 3. query result by skip and limit
-    const result = await this.companyModel.find({})
+    const result = await this.companyModel.find(filter)
       .skip(skip)
       .limit(+limit)
     // .sort(sort)
