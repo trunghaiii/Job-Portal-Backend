@@ -49,7 +49,12 @@ export class CompaniesService {
     return updateCompany;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+  async remove(id: string) {
+    const deleteCompany = await this.companyModel.deleteOne(
+      {
+        _id: id
+      }
+    )
+    return deleteCompany;
   }
 }
