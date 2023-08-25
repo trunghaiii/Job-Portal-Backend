@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Company } from './schemas/company.schema';
 import { Model } from 'mongoose';
 import { IUser } from 'src/users/users.interface';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class CompaniesService {
@@ -25,8 +26,33 @@ export class CompaniesService {
     return newCompany;
   }
 
-  findAll() {
-    return `This action returns all companies`;
+  async findAllPagination(currentPage: string, limit: string, queryString: string) {
+    const { sort, projection, population } = aqp(queryString);
+    // 1. calculate skip:
+    const skip: number = (+currentPage - 1) * +limit
+
+    // 2. calculate totalPages and totalCompanies
+    const totalCompanies: number = (await this.companyModel.find({})).length
+    const totalPages: number = Math.ceil(totalCompanies / +limit)
+
+    // 3. query result by skip and limit
+    const result = await this.companyModel.find({})
+      .skip(skip)
+      .limit(+limit)
+    // .sort(sort)
+    // .select(projection)
+    // .populate(population)
+
+    return {
+      meta: {
+        current: +currentPage, //the current page
+        pageSize: +limit, //number of companies each page
+        pages: totalPages, //number of pages
+        total: totalCompanies // total number of companies
+      },
+      result //kết quả query
+    }
+
   }
 
   findOne(id: number) {
