@@ -105,7 +105,10 @@ export class UsersService {
     return updateUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    const deleteUser = await this.UserModel.deleteOne({
+      _id: id
+    })
+    return deleteUser;
   }
 }
