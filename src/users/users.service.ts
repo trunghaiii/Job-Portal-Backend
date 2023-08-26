@@ -85,8 +85,24 @@ export class UsersService {
     return compareSync(pass, hash);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(updateUserDto: UpdateUserDto, user: any) {
+
+    // 1. update user data to the database:
+    const updateUser = await this.UserModel.findByIdAndUpdate(updateUserDto._id, {
+      name: updateUserDto.name,
+      email: updateUserDto.email,
+      age: +updateUserDto.age,
+      gender: updateUserDto.gender,
+      address: updateUserDto.address,
+      role: updateUserDto.role,
+      company: updateUserDto.company,
+      updatedBy: {
+        id: user._id,
+        email: user.email
+      }
+    });
+
+    return updateUser;
   }
 
   remove(id: number) {
