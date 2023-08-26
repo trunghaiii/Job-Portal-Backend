@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable, BadRequestException } from '@nestjs/common';
+import { CreateUserDto, RegisterUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 import { InjectModel } from '@nestjs/mongoose';
@@ -25,6 +25,30 @@ export class UsersService {
       password: hash
     });
     return createdUser.save();
+
+  }
+
+  async registerUser(registerUserDto: RegisterUserDto) {
+
+    // console.log("gg", registerUserDto);
+    // 0. check if email already existed in database:
+    const existedEmail = await this.UserModel.findOne({ email: registerUserDto.email })
+
+    if (existedEmail) throw new BadRequestException("Email Already Existed");
+    // 1. hash the password using bcrypt
+    const hash = hashSync(registerUserDto.password, saltRounds);
+
+    // 2. save user data to the database:
+    const registerUser = new this.UserModel({
+      name: registerUserDto.name,
+      email: registerUserDto.email,
+      password: hash,
+      age: +registerUserDto.age,
+      gender: registerUserDto.gender,
+      address: registerUserDto.address,
+      role: "USER"
+    }).save();
+    return registerUser;
 
   }
 
