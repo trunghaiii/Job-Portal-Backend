@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Request } from '@nes
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ResponseMessage } from 'src/decorators/decoratorCustomize';
+import { Public, ResponseMessage } from 'src/decorators/decoratorCustomize';
 
 @Controller('users')
 export class UsersController {
@@ -21,8 +21,10 @@ export class UsersController {
   }
 
   @Get(':id')
+  @Public()
+  @ResponseMessage("Get User Data Successfully!!")
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Patch()
