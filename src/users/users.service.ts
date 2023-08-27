@@ -69,8 +69,36 @@ export class UsersService {
 
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAllPagination(currentPage: string, limit: string) {
+    //const { filter, sort, projection, population } = aqp(queryString);
+    //delete filter.page;
+    // console.log("filter", filter);
+
+    // 1. calculate skip:
+    const skip: number = (+currentPage - 1) * +limit
+
+    // 2. calculate totalPages and totalUsers
+    const totalUsers: number = (await this.UserModel.find({})).length
+    const totalPages: number = Math.ceil(totalUsers / +limit)
+
+    // 3. query result by skip and limit
+    const result = await this.UserModel.find({})
+      .skip(skip)
+      .limit(+limit)
+      .select("-password")
+    // .sort(sort)
+    // .select(projection)
+    // .populate(population)
+
+    return {
+      meta: {
+        current: +currentPage, //the current page
+        pageSize: +limit, //number of companies each page
+        pages: totalPages, //number of pages
+        total: totalUsers // total number of companies
+      },
+      result //kết quả query
+    }
   }
 
   async findOne(id: string) {
