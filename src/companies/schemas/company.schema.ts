@@ -26,11 +26,11 @@ export class Company {
         email: string
     }
 
-    @Prop({ type: Object })
-    deleteBy: {
-        id: mongoose.Schema.Types.ObjectId,
-        email: string
-    }
+    // @Prop({ type: Object })
+    // deleteBy: {
+    //     id: mongoose.Schema.Types.ObjectId,
+    //     email: string
+    // }
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
