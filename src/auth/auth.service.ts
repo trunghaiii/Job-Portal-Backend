@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { IUser } from 'src/users/users.interface';
@@ -45,7 +45,6 @@ export class AuthService {
         //2. return response to front end
         return {
             access_token: this.jwtService.sign(payload),
-            refresh_token: refresh_token,
             user: {
                 _id,
                 name,
@@ -54,6 +53,55 @@ export class AuthService {
             }
 
         };
+    }
+
+    handleRefreshToken = async (refreshToken, response: Response) => {
+        try {
+            // 0. verify refresh token
+            let refreshTokenCheckData = this.jwtService.verify(
+                refreshToken,
+                {
+                    secret: this.configService.get<string>("REFRESH_TOKEN_KEY")
+                }
+            )
+
+            const userData = await this.usersService.findUserByToken(refreshToken)
+            if (userData) {
+
+                const { _id, name, email, role } = userData;
+                const payload = { _id, name, email, role };
+
+                const refresh_token = this.generateRefreshToken(payload)
+                //1. update refresh token in the database:
+                await this.usersService.updateRefreshTokenDB(refresh_token, _id)
+
+                //2. set cookies for refresh token:
+                response.cookie('refresh_token', refresh_token,
+                    {
+                        httpOnly: true,
+                        maxAge: ms(this.configService.get<string>('REFRESH_TOKEN_EXPIRE'))
+                    }
+                )
+
+                //3. return response to front end
+                return {
+                    access_token: this.jwtService.sign(payload),
+                    user: {
+                        _id,
+                        name,
+                        email,
+                        role
+                    }
+
+                };
+            } else {
+                throw new BadRequestException("Invalid Refresh Token!");
+            }
+
+        } catch (error) {
+            throw new BadRequestException("Invalid Refresh Token!");
+
+        }
     }
 
     generateRefreshToken = (payload: any) => {

@@ -144,6 +144,10 @@ export class UsersService {
     )
   }
 
+  findUserByToken = async (refreshToken) => {
+    return await this.UserModel.findOne({ refreshToken })
+  }
+
   async remove(id: string) {
     const deleteUser = await this.UserModel.deleteOne({
       _id: id
