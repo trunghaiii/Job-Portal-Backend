@@ -104,6 +104,16 @@ export class AuthService {
         }
     }
 
+    handleLogOut = async (response: Response, user) => {
+        // 0. update refresh token in database to ""
+        await this.usersService.updateRefreshTokenDB("", user._id);
+
+        // 1. delete the cookies
+        response.clearCookie("refresh_token")
+
+        return "Logged Out!!!";
+    }
+
     generateRefreshToken = (payload: any) => {
         return this.jwtService.sign(
             payload,

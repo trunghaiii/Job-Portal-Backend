@@ -54,6 +54,16 @@ export class AuthController {
         return this.authService.handleRefreshToken(refreshToken, response);
     }
 
+    @Post("logout")
+    @ResponseMessage("Logout Successfully!!")
+    Logout(
+        @User() user: IUser,
+        @Res({ passthrough: true }) response: Response
+    ) {
+
+        return this.authService.handleLogOut(response, user);
+    }
+
     //@UseGuards(JwtAuthGuard)
     // @Get("profile")
     // getProfile(@Request() req) {
