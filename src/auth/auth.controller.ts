@@ -21,9 +21,10 @@ export class AuthController {
     @Post("login")
     Login(
         @Req() req,
-        @Res({ passthrough: true }) response: Response
+        @Res({ passthrough: true }) response: Response,
+        @User() user: IUser
     ) {
-        return this.authService.login(req.user, response);
+        return this.authService.login(user, response);
     }
 
     @Public()
