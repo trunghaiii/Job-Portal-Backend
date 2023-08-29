@@ -28,9 +28,15 @@ export class AuthService {
     async login(user: IUser) {
         const { _id, name, email, role } = user;
         const payload = { _id, name, email, role };
+
+        const refresh_token = this.generateRefreshToken(payload)
+        //0. update refresh token in the database:
+        await this.usersService.updateRefreshTokenDB(refresh_token, _id)
+
+
         return {
             access_token: this.jwtService.sign(payload),
-            refresh_token: this.generateRefreshToken(payload),
+            refresh_token: refresh_token,
             user: {
                 _id,
                 name,

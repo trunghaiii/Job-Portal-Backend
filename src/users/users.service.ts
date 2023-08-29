@@ -137,6 +137,13 @@ export class UsersService {
     return updateUser;
   }
 
+  updateRefreshTokenDB = async (refreshToken, id) => {
+    await this.UserModel.findByIdAndUpdate(id, {
+      refreshToken: refreshToken
+    }
+    )
+  }
+
   async remove(id: string) {
     const deleteUser = await this.UserModel.deleteOne({
       _id: id
