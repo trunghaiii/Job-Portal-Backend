@@ -20,7 +20,10 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // config cors
-  app.enableCors();
+  app.enableCors({
+    origin: true,
+    credentials: true
+  });
   await app.listen(configService.get('PORT'));
 }
 bootstrap();
