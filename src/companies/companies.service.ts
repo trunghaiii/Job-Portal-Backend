@@ -35,8 +35,8 @@ export class CompaniesService {
     const skip: number = (+currentPage - 1) * +limit
 
     // 2. calculate totalPages and totalCompanies
-    const totalCompanies: number = (await this.companyModel.find({})).length
-    const totalPages: number = Math.ceil(totalCompanies / +limit)
+    let totalCompanies: number = (await this.companyModel.find({})).length
+    let totalPages: number = Math.ceil(totalCompanies / +limit)
 
     // 3. query result by skip and limit
     const result = await this.companyModel.find(filter)
@@ -46,6 +46,17 @@ export class CompaniesService {
     // .select(projection)
     // .populate(population)
 
+
+    // 4. update totalCompanies, totalPages after filtering
+    const resultCount = await this.companyModel.find(filter).count()
+
+    if (resultCount < totalCompanies) {
+      totalCompanies = resultCount
+      totalPages = Math.ceil(totalCompanies / +limit)
+    }
+
+
+    // 5. return result
     return {
       meta: {
         current: +currentPage, //the current page
