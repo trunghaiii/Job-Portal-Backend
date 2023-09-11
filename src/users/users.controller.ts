@@ -23,8 +23,9 @@ export class UsersController {
   findAllPagination(
     @Query("page") currentPage: string,
     @Query("limit") limit: string,
+    @Query() queryString: string
   ) {
-    return this.usersService.findAllPagination(currentPage, limit);
+    return this.usersService.findAllPagination(currentPage, limit, queryString);
   }
 
   @Get(':id')

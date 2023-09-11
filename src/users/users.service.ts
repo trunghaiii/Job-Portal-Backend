@@ -7,6 +7,7 @@ import { User } from './schemas/user.schema';
 import { Model } from 'mongoose';
 
 import { hashSync, compareSync } from "bcrypt"
+import aqp from 'api-query-params';
 
 const saltRounds: number = 10;
 
@@ -69,9 +70,12 @@ export class UsersService {
 
   }
 
-  async findAllPagination(currentPage: string, limit: string) {
-    //const { filter, sort, projection, population } = aqp(queryString);
-    //delete filter.page;
+  async findAllPagination(currentPage: string, limit: string, queryString: string) {
+
+    //console.log("queryString", queryString);
+
+    const { filter, sort, projection, population } = aqp(queryString);
+    delete filter.page;
     // console.log("filter", filter);
 
     // 1. calculate skip:
@@ -82,7 +86,7 @@ export class UsersService {
     const totalPages: number = Math.ceil(totalUsers / +limit)
 
     // 3. query result by skip and limit
-    const result = await this.UserModel.find({})
+    const result = await this.UserModel.find(filter)
       .skip(skip)
       .limit(+limit)
       .select("-password")
