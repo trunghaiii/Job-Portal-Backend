@@ -82,8 +82,8 @@ export class UsersService {
     const skip: number = (+currentPage - 1) * +limit
 
     // 2. calculate totalPages and totalUsers
-    const totalUsers: number = (await this.UserModel.find({})).length
-    const totalPages: number = Math.ceil(totalUsers / +limit)
+    let totalUsers: number = (await this.UserModel.find({})).length
+    let totalPages: number = Math.ceil(totalUsers / +limit)
 
     // 3. query result by skip and limit
     const result = await this.UserModel.find(filter)
@@ -94,6 +94,13 @@ export class UsersService {
     // .select(projection)
     // .populate(population)
 
+    // 4. update totalUsers and totalPages after filtering
+    const resultCount = await this.UserModel.find(filter).count()
+
+    if (resultCount < totalUsers) {
+      totalUsers = resultCount
+      totalPages = Math.ceil(totalUsers / +limit)
+    }
     return {
       meta: {
         current: +currentPage, //the current page
