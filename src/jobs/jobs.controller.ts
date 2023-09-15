@@ -24,8 +24,11 @@ export class JobsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobsService.update(+id, updateJobDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateJobDto: UpdateJobDto) {
+
+    return this.jobsService.update(id, updateJobDto);
   }
 
   @Delete(':id')
