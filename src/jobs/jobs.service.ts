@@ -34,7 +34,11 @@ export class JobsService {
     return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} job`;
+  async remove(id: string) {
+
+    // 0. delete job with corresponding id in the database
+
+    const result = await this.JobModel.findByIdAndDelete(id)
+    return result;
   }
 }
