@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
@@ -14,8 +14,12 @@ export class JobsController {
   }
 
   @Get()
-  findAll() {
-    return this.jobsService.findAll();
+  findAllPagination(
+    @Query("current") current: string,
+    @Query("limit") limit: string,
+    @Query() queryString: string
+  ) {
+    return this.jobsService.findAllPagination(current, limit, queryString);
   }
 
   @Get(':id')

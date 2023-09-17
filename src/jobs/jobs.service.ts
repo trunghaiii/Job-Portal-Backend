@@ -4,6 +4,7 @@ import { UpdateJobDto } from './dto/update-job.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Job } from './shemas/job.schema';
 import { Model } from 'mongoose';
+import aqp from 'api-query-params';
 
 @Injectable()
 export class JobsService {
@@ -18,7 +19,43 @@ export class JobsService {
     return result;
   }
 
-  findAll() {
+  async findAllPagination(current: string, limit: string, queryString: string) {
+
+    const { filter } = aqp(queryString);
+    delete filter.current
+
+    // 1. calculate skip:
+    const skip: number = (+current - 1) * +limit
+
+    // 2. calculate totalPages and totalUsers
+    let totalJobs: number = (await this.JobModel.find({})).length
+    let totalPages: number = Math.ceil(totalJobs / +limit)
+
+    // 3. query result by skip and limit
+    const result = await this.JobModel.find(filter)
+      .skip(skip)
+      .limit(+limit)
+    // .sort(sort)
+    // .select(projection)
+    // .populate(population)
+
+    // 4. update totalJobs and totalPages after filtering
+    const resultCount = await this.JobModel.find(filter).count()
+
+    if (resultCount < totalJobs) {
+      totalJobs = resultCount
+      totalPages = Math.ceil(totalJobs / +limit)
+    }
+    return {
+      meta: {
+        current: +current, //the current page
+        pageSize: +limit, //number of jobs each page
+        pages: totalPages, //number of pages
+        total: totalJobs // total number of jobs
+      },
+      result //kết quả query
+    }
+
     return `This action returns all jobs`;
   }
 
