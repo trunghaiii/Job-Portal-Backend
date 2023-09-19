@@ -21,7 +21,7 @@ export class FilesController {
         fileType: ".(png|jpeg|jpg|pdf|doc|docx)",
       })
       .addMaxSizeValidator({
-        maxSize: 1024 * 1024
+        maxSize: 1024 * 1024 // 1MB
       })
       .build({
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
