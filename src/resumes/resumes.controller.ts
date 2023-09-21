@@ -2,14 +2,19 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ResumesService } from './resumes.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { IUser } from 'src/users/users.interface';
+import { User } from 'src/decorators/decoratorCustomize';
 
 @Controller('resumes')
 export class ResumesController {
-  constructor(private readonly resumesService: ResumesService) {}
+  constructor(private readonly resumesService: ResumesService) { }
 
   @Post()
-  create(@Body() createResumeDto: CreateResumeDto) {
-    return this.resumesService.create(createResumeDto);
+  create(
+    @Body() createResumeDto: CreateResumeDto,
+    @User() user: IUser
+  ) {
+    return this.resumesService.create(createResumeDto, user);
   }
 
   @Get()

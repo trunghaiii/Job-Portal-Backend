@@ -10,7 +10,7 @@ export class Resume {
     email: string;
 
     @Prop({ unique: true })
-    ResumeId: mongoose.Schema.Types.ObjectId;
+    userId: mongoose.Schema.Types.ObjectId;
 
     @Prop()
     url: string;

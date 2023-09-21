@@ -1,11 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
+import { IUser } from 'src/users/users.interface';
+import { InjectModel } from '@nestjs/mongoose';
+import { Resume } from './schemas/resume.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ResumesService {
-  create(createResumeDto: CreateResumeDto) {
-    return 'This action adds a new resume';
+
+  constructor(@InjectModel(Resume.name) private ResumeModel: Model<Resume>) { }
+
+  create(createResumeDto: CreateResumeDto, user: IUser) {
+
+    // 1. save resume data to the database:
+    const createResume = new this.ResumeModel({
+      email: user.email,
+      userId: user._id,
+      url: createResumeDto.url,
+      status: "PENDING",
+      companyId: createResumeDto.companyId,
+      jobId: createResumeDto.jobId,
+      createdBy: {
+        id: user._id,
+        email: user.email
+      }
+    }).save();
+
+    return createResume;
   }
 
   findAll() {
