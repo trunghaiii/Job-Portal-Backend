@@ -85,7 +85,11 @@ export class ResumesService {
 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} resume`;
+  async remove(id: string) {
+
+    // 0. delete resume with corresponding id in the database
+
+    const result = await this.ResumeModel.findByIdAndDelete(id)
+    return result;
   }
 }
