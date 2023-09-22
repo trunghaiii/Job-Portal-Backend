@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ResumesService } from './resumes.service';
 import { CreateResumeDto } from './dto/create-resume.dto';
 import { UpdateResumeDto } from './dto/update-resume.dto';
@@ -18,8 +18,13 @@ export class ResumesController {
   }
 
   @Get()
-  findAll() {
-    return this.resumesService.findAll();
+  findAllPaginaton(
+    @Query("current") current: string,
+    @Query("limit") limit: string,
+    @Query() queryString: string
+  ) {
+
+    return this.resumesService.findAllPagination(current, limit, queryString);
   }
 
   @Get(':id')

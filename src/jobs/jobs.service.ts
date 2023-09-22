@@ -27,7 +27,7 @@ export class JobsService {
     // 1. calculate skip:
     const skip: number = (+current - 1) * +limit
 
-    // 2. calculate totalPages and totalUsers
+    // 2. calculate totalPages and totalJobs
     let totalJobs: number = (await this.JobModel.find({})).length
     let totalPages: number = Math.ceil(totalJobs / +limit)
 
