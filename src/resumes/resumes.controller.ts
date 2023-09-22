@@ -33,8 +33,10 @@ export class ResumesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateResumeDto: UpdateResumeDto) {
-    return this.resumesService.update(+id, updateResumeDto);
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateResumeDto: UpdateResumeDto) {
+    return this.resumesService.updateStatus(id, updateResumeDto);
   }
 
   @Delete(':id')

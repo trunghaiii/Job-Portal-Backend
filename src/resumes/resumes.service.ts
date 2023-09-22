@@ -76,8 +76,13 @@ export class ResumesService {
     return `This action returns a #${id} resume`;
   }
 
-  update(id: number, updateResumeDto: UpdateResumeDto) {
-    return `This action updates a #${id} resume`;
+  async updateStatus(id: string, updateResumeDto: UpdateResumeDto) {
+
+    // 0. update status data in the database:
+    const result = await this.ResumeModel.findByIdAndUpdate(id, updateResumeDto)
+
+    return result;
+
   }
 
   remove(id: number) {
