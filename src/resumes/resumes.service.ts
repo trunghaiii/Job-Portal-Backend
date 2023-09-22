@@ -72,6 +72,48 @@ export class ResumesService {
     return queryString;
   }
 
+  async findAllByUser(current: string, limit: string, queryString: any, user: IUser) {
+
+    queryString.userId = user._id
+    const { filter } = aqp(queryString);
+    delete filter.current
+
+    // 1. calculate skip:
+    const skip: number = (+current - 1) * +limit
+
+    // 2. calculate totalPages and totalResumes
+    let totalResumes: number = (await this.ResumeModel.find({})).length
+    let totalPages: number = Math.ceil(totalResumes / +limit)
+
+    // 3. query result by skip and limit
+    const result = await this.ResumeModel.find(filter)
+      .skip(skip)
+      .limit(+limit)
+    // .sort(sort)
+    // .select(projection)
+    // .populate(population)
+
+    // 4. update totalResumes and totalPages after filtering
+    const resultCount = await this.ResumeModel.find(filter).count()
+
+    if (resultCount < totalResumes) {
+      totalResumes = resultCount
+      totalPages = Math.ceil(totalResumes / +limit)
+    }
+    return {
+      meta: {
+        current: +current, //the current page
+        pageSize: +limit, //number of resumes each page
+        pages: totalPages, //number of pages
+        total: totalResumes // total number of resumes
+      },
+      result //kết quả query
+    }
+
+
+    // return user;
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} resume`;
   }

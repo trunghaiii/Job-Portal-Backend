@@ -27,6 +27,17 @@ export class ResumesController {
     return this.resumesService.findAllPagination(current, limit, queryString);
   }
 
+  @Get("byuser")
+  findAllByUser(
+    @Query("current") current: string,
+    @Query("limit") limit: string,
+    @Query() queryString: string,
+    @User() user: IUser
+  ) {
+
+    return this.resumesService.findAllByUser(current, limit, queryString, user);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.resumesService.findOne(+id);
