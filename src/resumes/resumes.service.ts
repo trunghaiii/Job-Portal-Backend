@@ -65,7 +65,7 @@ export class ResumesService {
         pages: totalPages, //number of pages
         total: totalResumes // total number of resumes
       },
-      result //kết quả query
+      result //query result
     }
 
 
