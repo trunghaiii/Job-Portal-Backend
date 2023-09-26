@@ -27,7 +27,7 @@ export class FilesController {
         errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY
       }),
   ) file: Express.Multer.File) {
-    console.log(file);
+    return file.filename
   }
 
   @Get()
