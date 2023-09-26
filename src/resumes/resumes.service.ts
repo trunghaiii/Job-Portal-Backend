@@ -33,7 +33,7 @@ export class ResumesService {
 
   async findAllPagination(current: string, limit: string, queryString: any) {
 
-    const { filter } = aqp(queryString);
+    const { filter, population } = aqp(queryString);
     delete filter.current
 
     // 1. calculate skip:
@@ -47,9 +47,9 @@ export class ResumesService {
     const result = await this.ResumeModel.find(filter)
       .skip(skip)
       .limit(+limit)
-    // .sort(sort)
-    // .select(projection)
-    // .populate(population)
+      // .sort(sort)
+      //.select(projection)
+      .populate(population)
 
     // 4. update totalResumes and totalPages after filtering
     const resultCount = await this.ResumeModel.find(filter).count()
