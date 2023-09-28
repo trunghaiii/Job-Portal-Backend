@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { JobsService } from './jobs.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
+import { Public } from 'src/decorators/decoratorCustomize';
 
 @Controller('jobs')
 export class JobsController {
@@ -14,6 +15,7 @@ export class JobsController {
   }
 
   @Get()
+  @Public()
   findAllPagination(
     @Query("current") current: string,
     @Query("limit") limit: string,
