@@ -19,7 +19,7 @@ export class Resume {
     @Prop()
     status: string;
 
-    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: "Company" })
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Company.name })
     companyId: mongoose.Schema.Types.ObjectId;
 
     @Prop()

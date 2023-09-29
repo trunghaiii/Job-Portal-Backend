@@ -21,7 +21,7 @@ export class JobsService {
 
   async findAllPagination(current: string, limit: string, queryString: string) {
 
-    const { filter } = aqp(queryString);
+    const { filter, population } = aqp(queryString);
     delete filter.current
 
     // 1. calculate skip:
@@ -35,9 +35,9 @@ export class JobsService {
     const result = await this.JobModel.find(filter)
       .skip(skip)
       .limit(+limit)
-    // .sort(sort)
-    // .select(projection)
-    // .populate(population)
+      // .sort(sort)
+      // .select(projection)
+      .populate(population)
 
     // 4. update totalJobs and totalPages after filtering
     const resultCount = await this.JobModel.find(filter).count()

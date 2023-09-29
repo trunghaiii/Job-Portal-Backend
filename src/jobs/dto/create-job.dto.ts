@@ -20,11 +20,14 @@ export class CreateJobDto {
     @IsArray()
     skills: string[];
 
-    @IsNotEmptyObject()
-    @IsObject()
-    @ValidateNested()
-    @Type(() => Company)
-    company: Company;
+    // @IsNotEmptyObject()
+    // @IsObject()
+    // @ValidateNested()
+    // @Type(() => Company)
+    // company: Company;
+    @IsNotEmpty()
+    @IsString()
+    company: string
 
     @IsNotEmpty()
     @IsString()

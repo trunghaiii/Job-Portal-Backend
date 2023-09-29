@@ -11,6 +11,7 @@ export class UsersController {
 
   @Post()
   @ResponseMessage("Create New User Successfully!!")
+  // @Public()
   create(
     @Body() createUserDto: CreateUserDto,
     @User() user: IUser) {
