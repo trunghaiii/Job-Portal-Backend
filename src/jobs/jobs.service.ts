@@ -59,8 +59,15 @@ export class JobsService {
     return `This action returns all jobs`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} job`;
+  async findOne(id: string, queryString: string) {
+
+    const { population } = aqp(queryString);
+
+    // get job dada with coresponding id in the database:
+
+    const jobData = await this.JobModel.findById(id).populate(population)
+
+    return jobData;
   }
 
   async update(id: string, updateJobDto: UpdateJobDto) {
