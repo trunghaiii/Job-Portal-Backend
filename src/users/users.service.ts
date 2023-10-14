@@ -165,4 +165,8 @@ export class UsersService {
     })
     return deleteUser;
   }
+
+  findUserNumber = async () => {
+    return await this.UserModel.find().count()
+  }
 }

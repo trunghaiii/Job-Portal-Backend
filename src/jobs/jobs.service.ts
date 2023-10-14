@@ -85,4 +85,9 @@ export class JobsService {
     const result = await this.JobModel.findByIdAndDelete(id)
     return result;
   }
+
+  async findJobNumber() {
+
+    return await this.JobModel.find().count();
+  }
 }
