@@ -34,7 +34,6 @@ export class UsersService {
       gender: createUserDto.gender,
       address: createUserDto.address,
       role: createUserDto.role,
-      company: createUserDto.company,
       createdBy: {
         id: user._id,
         email: user.email
@@ -138,7 +137,6 @@ export class UsersService {
       gender: updateUserDto.gender,
       address: updateUserDto.address,
       role: updateUserDto.role,
-      company: updateUserDto.company,
       updatedBy: {
         id: user._id,
         email: user.email
