@@ -96,6 +96,13 @@ export class JobsService {
     return result;
   }
 
+  async findAllJobByCompanyId(id: string) {
+
+    const result = await this.JobModel.find({ company: id })
+
+    return result;
+  }
+
   async findJobNumber() {
 
     return await this.JobModel.find().count();

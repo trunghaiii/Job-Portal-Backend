@@ -6,11 +6,15 @@ import { Company } from './schemas/company.schema';
 import { Model } from 'mongoose';
 import { IUser } from 'src/users/users.interface';
 import aqp from 'api-query-params';
+import { JobsService } from 'src/jobs/jobs.service';
 
 @Injectable()
 export class CompaniesService {
 
-  constructor(@InjectModel(Company.name) private companyModel: Model<Company>) { }
+  constructor(
+    @InjectModel(Company.name) private companyModel: Model<Company>,
+    private jobsService: JobsService
+  ) { }
 
   async create(createCompanyDto: CreateCompanyDto, user: IUser) {
     // console.log(createCompanyDto);
@@ -90,11 +94,24 @@ export class CompaniesService {
   }
 
   async remove(id: string) {
+
+    // 0. delete company by id
     const deleteCompany = await this.companyModel.deleteOne(
       {
         _id: id
       }
     )
+
+    // 1. find job list that match company id
+    let jobList = await this.jobsService.findAllJobByCompanyId(id)
+
+    // 2. delete joblist
+    if (jobList && jobList.length !== 0) (
+      jobList.map(async (job: any) => {
+        await this.jobsService.remove(job._id)
+      })
+    )
+
     return deleteCompany;
   }
 }
