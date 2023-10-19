@@ -8,5 +8,6 @@ import { Resume, ResumeSchema } from './schemas/resume.schema';
   imports: [MongooseModule.forFeature([{ name: Resume.name, schema: ResumeSchema }])],
   controllers: [ResumesController],
   providers: [ResumesService],
+  exports: [ResumesService]
 })
 export class ResumesModule { }

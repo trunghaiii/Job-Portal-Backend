@@ -5,11 +5,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Job } from './shemas/job.schema';
 import { Model } from 'mongoose';
 import aqp from 'api-query-params';
+import { ResumesService } from 'src/resumes/resumes.service';
 
 @Injectable()
 export class JobsService {
 
-  constructor(@InjectModel(Job.name) private JobModel: Model<Job>) { }
+  constructor(
+    private resumesService: ResumesService,
+    @InjectModel(Job.name) private JobModel: Model<Job>
+
+  ) { }
 
   async create(createJobDto: CreateJobDto) {
 
@@ -83,6 +88,11 @@ export class JobsService {
     // 0. delete job with corresponding id in the database
 
     const result = await this.JobModel.findByIdAndDelete(id)
+
+    // 1. delete resume associated with job
+
+    const deleteResume = await this.resumesService.removeResumeByJobId(id)
+
     return result;
   }
 

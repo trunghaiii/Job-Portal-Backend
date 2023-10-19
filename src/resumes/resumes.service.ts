@@ -134,4 +134,12 @@ export class ResumesService {
     const result = await this.ResumeModel.findByIdAndDelete(id)
     return result;
   }
+
+  async removeResumeByJobId(id: string) {
+
+    // 0. delete resume by job id
+
+    const result = await this.ResumeModel.deleteMany({ jobId: id })
+    return result;
+  }
 }
